@@ -48,12 +48,18 @@ come from files and the approval comes from a person.
    `python3 scripts/ledger.py create --deal <slug> --client "<client>" --contact "<Name <email>>" --offer <offer> --line "<description>=<amount>" [--credit <usd>] [--due-days 14]`
    Show the printed change, then re-run with `--confirm`. The invoice document is now
    `invoices/INV-KM-NNNN.md`.
+4b. **Stripe, if `STRIPE_API_KEY` is on this agent** (`python3 scripts/stripe.py whoami` answers; `NO STRIPE` means skip this step):
+   `python3 scripts/stripe.py invoice create INV-KM-NNNN --email <billing email> --name "<client>" --line "<description>=<amount>" [--line "Credit (approved on the deal)=-<credit>"] --due-days 14`
+   Show the printed change, re-run with `--confirm`. Keep `stripe_invoice` and `hosted_invoice_url`
+   from the output: `ledger.py note INV-KM-NNNN --text "Stripe <in_...> <hosted_invoice_url>" --confirm`.
+   Stripe does not email anyone - the approved email below carries the link.
 5. **Draft the covering email** to `drafts/INV-KM-NNNN-send.md` with the front-matter
    `scripts/mail.py` documents: `to:` the billing contact, `from: Keymaker Finance <finance@keymaker.agency>`,
    `reply_to: finance@keymaker.agency`, `cc:` the finance lead's address from the canon,
    `subject: Invoice INV-KM-NNNN from Keymaker - <offer>`, `request_id: approval-INV-KM-NNNN-send`.
    Body, under 120 words: thank them, one line on what was sold, the total and the due date, the
-   payment instructions, the full invoice document pasted below a `---` line. Last line, always:
+   payment instructions - with Stripe, the line `Pay online: <hosted_invoice_url>` first, bank transfer
+   second - the full invoice document pasted below a `---` line. Last line, always:
    `Keymaker is a demonstration agency built in public during the Agent-Native Agency workshop. This invoice was drafted by our finance agent and approved by a person before it was sent.`
 6. **Ask the finance lead.** `mcp__trinity__ask_operator` with `type: approval`, `to: primary`,
    `request_id: approval-INV-KM-NNNN-send`, `title: "Invoice <client> <total> (INV-KM-NNNN)"`,
@@ -75,6 +81,7 @@ You are woken with the answer (or read it with `get_my_ask approval-INV-KM-NNNN-
   Approved, tell the finance lead the document is approved and they send it by hand; when they say
   they did, `mark-sent --via "by hand"`.
 - **don't send**, expired, or anything else: send nothing. `ledger.py note` it. Tell the caller.
+  With Stripe: `python3 scripts/stripe.py invoice void <in_...> --confirm` so no payment page stays open for a document nobody approved.
 
 ## Never
 

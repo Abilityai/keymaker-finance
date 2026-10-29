@@ -69,11 +69,14 @@ def money(cents):
 
 # ---------------------------------------------------------------------------------- commands
 def cmd_whoami(a):
-    acct = call("GET", "/account")
+    """Proves the key works without needing Accounts read: balance + the newest invoice."""
     bal = call("GET", "/balance")
     avail = sum(b["amount"] for b in bal.get("available", []) if b["currency"] == "usd")
-    print(f"account: {acct.get('id')} · {acct.get('settings', {}).get('dashboard', {}).get('display_name') or acct.get('business_profile', {}).get('name')} · livemode={acct.get('charges_enabled')}")
-    print(f"available USD balance: {money(avail)}")
+    pend = sum(b["amount"] for b in bal.get("pending", []) if b["currency"] == "usd")
+    k = key()
+    print(f"stripe: key {k[:8]}…{k[-4:]} ({'live' if '_live_' in k else 'test'}) · balance available {money(avail)}, pending {money(pend)}")
+    inv = call("GET", "/invoices?limit=1")
+    print(f"invoices readable: {'yes' if 'data' in inv else 'no'}")
 
 
 def find_customer(email, name):

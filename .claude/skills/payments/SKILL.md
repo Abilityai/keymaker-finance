@@ -12,8 +12,8 @@ metadata:
 
 # Payments
 
-Cash is a fact a person tells you with a reference and a date. This public cut has no bank feed:
-you never infer a payment, you record one.
+Cash is a fact a person tells you with a reference and a date - or a fact Stripe tells you, when the
+key is present (`--check`). You never infer a payment; you record one from one of those two sources.
 
 ## Rules
 
@@ -31,6 +31,7 @@ you never infer a payment, you record one.
 |---|---|---|
 | unpaid | "what is unpaid", "what is outstanding", no arguments | `python3 scripts/ledger.py list --status Sent` (a rep: filter to their deals). Show the table; say the total outstanding and how many are overdue. |
 | record | "X paid", a number with `--amount --ref --date` | `ledger.py show <number>` first. Then `ledger.py mark-paid <number> --amount N --ref "<ref>" --date YYYY-MM-DD`; show the printed change; re-run with `--confirm`. Tell Delivery nothing - a paid invoice is not an event for them; the Monday review carries it. |
+| check | `--check`, "anything paid on Stripe", the Monday review | `python3 scripts/stripe.py payments --since <30 days ago>` (`NO STRIPE` = say so, stop). For each paid row whose `number` matches a `Sent`/`Approved` ledger invoice: `ledger.py mark-paid <number> --amount <amount> --ref "stripe <payment_intent>" --date <paid_at>` - show, then `--confirm`. A checkout payment with no invoice number (a website purchase): tell the orchestrator in your final answer with the product, email and amount - it is a new client for Sales, not a ledger row here. |
 | lookup | "did X pay", "what did we invoice X" | `ledger.py list --deal <slug>` and `show`. Answer from the rows. |
 
 ## After a write
