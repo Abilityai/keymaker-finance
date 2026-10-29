@@ -116,9 +116,14 @@ def resolve_invoice(ref):
     if ref.startswith("in_"):
         return call("GET", f"/invoices/{ref}")
     found = call("GET", "/invoices/search?" + urllib.parse.urlencode({"query": f"metadata['keymaker_number']:'{ref}'", "limit": 1}))
-    if not found.get("data"):
-        sys.exit(f"no Stripe invoice carries keymaker_number {ref}")
-    return found["data"][0]
+    if found.get("data"):
+        return found["data"][0]
+    # the search index lags a minute behind a fresh create - scan the newest invoices instead
+    recent = call("GET", "/invoices?limit=100")
+    for inv in recent.get("data", []):
+        if (inv.get("metadata") or {}).get("keymaker_number") == ref:
+            return inv
+    sys.exit(f"no Stripe invoice carries keymaker_number {ref}")
 
 
 def cmd_invoice_status(a):
