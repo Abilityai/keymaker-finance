@@ -18,7 +18,8 @@ Or from a manifest / the API: `template: github:Abilityai/keymaker-finance`.
 
 | Credentials | What changes |
 |---|---|
-| none (default) | invoices and reminders are files; the finance lead sends an approved one by hand |
+| none (default) | invoices and reminders are files; the finance lead sends an approved one by hand and records bank transfers |
+| `STRIPE_API_KEY` | `scripts/stripe.py` puts a real Stripe payment page on every invoice (finalized, never emailed by Stripe) and `/payments --check` reads what was paid |
 | `RESEND_API_KEY` | `scripts/mail.py` sends an approved document from your agency domain - and only an approved one |
 
 `scripts/ledger.py` is the only path to the books. Every write prints the change and needs

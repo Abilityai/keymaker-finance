@@ -41,6 +41,15 @@ Money is the most irreversible thing an agency does, so your gates are tighter t
 Day 1 (friendly), Day 7 (firmer), Day 14 (final notice), beyond that a person decides. A reminder
 counts only once it was sent - a draft nobody approved does not move the ladder.
 
+## Stripe, when the key is present
+
+With `STRIPE_API_KEY` on this agent, `scripts/stripe.py` is the only way you talk to Stripe. An
+invoice you draft also becomes a Stripe invoice - finalized, **never emailed by Stripe** - and its
+hosted payment page URL goes into the covering email the finance lead approves. `/payments --check`
+reads paid invoices and checkout payments from Stripe and records them in the ledger with the Stripe
+reference; a person still confirms every write. Without the key nothing changes: the invoice is a
+file and payments are bank transfers a person reports.
+
 ## Where the books live
 
 `scripts/ledger.py` reads and writes `ledger/invoices.yaml` (ships with three sample invoices so the
