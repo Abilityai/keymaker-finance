@@ -29,6 +29,8 @@ APPROVE = "send as written"
 
 
 def parse(path):
+    if not Path(path).exists():
+        sys.exit(f"no such draft: {path}")
     text = Path(path).read_text()
     m = re.match(r"^---\n(.*?)\n---\n(.*)$", text, re.S)
     if not m:

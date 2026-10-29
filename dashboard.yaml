@@ -1,0 +1,40 @@
+title: "Keymaker Finance"
+refresh: 60
+# Every number here is bound to a metric declared in template.yaml and recorded by the
+# playbooks (/overdue --review and /payments record them after each run). Nothing is typed in by hand.
+sections:
+  - title: "The books"
+    layout: grid
+    columns: 4
+    widgets:
+      - type: metric
+        id: outstanding_usd
+        metric: outstanding_usd
+        label: "Outstanding (USD)"
+      - type: metric
+        id: overdue_invoices
+        metric: overdue_invoices
+        label: "Overdue invoices"
+      - type: metric
+        id: invoiced_month_usd
+        metric: invoiced_month_usd
+        label: "Invoiced this month (USD)"
+      - type: metric
+        id: paid_month_usd
+        metric: paid_month_usd
+        label: "Paid this month (USD)"
+  - title: "Where to look"
+    layout: list
+    widgets:
+      - type: link
+        id: ledger_link
+        label: "The ledger"
+        url: "ledger/invoices.yaml"
+      - type: link
+        id: invoices_link
+        label: "Invoice documents"
+        url: "invoices/"
+      - type: link
+        id: canon_link
+        label: "The canon (price list, approvals, who is the finance lead)"
+        url: "https://github.com/Abilityai/keymaker-canon"
