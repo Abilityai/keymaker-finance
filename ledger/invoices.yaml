@@ -1,0 +1,75 @@
+# File-backed invoice ledger (the only backend of scripts/ledger.py in this public cut).
+# Sample invoices for a fictional agency - edit freely. Statuses must match CLAUDE.md.
+# Clients here are the same sample clients Keymaker Delivery ships with.
+next_number: 4
+invoices:
+  - number: INV-KM-0001
+    client: Harbor & Vale Logistics
+    deal: harbor-vale-logistics
+    billing_contact: "Dana Okafor <dana@harborvale.example>"
+    offer: Pilot
+    lines:
+      - description: "Pilot - dispatch desk on your own Trinity instance (install, two agents, one workflow live)"
+        amount_usd: 12000
+    credit_usd: 0
+    total_usd: 12000
+    issued: "2026-09-29"
+    due: "2026-10-13"
+    status: Paid
+    approval: approval-INV-KM-0001-send
+    sent_at: "2026-09-29"
+    sent_via: by hand
+    paid_at: "2026-10-10"
+    payment_ref: "ACH 7731-HVL"
+    reminders: []
+    notes:
+      - "2026-09-29 Invoiced on the signed Pilot order; approved by the finance lead, sent by hand."
+      - "2026-10-10 Paid in full, ACH 7731-HVL."
+  - number: INV-KM-0002
+    client: Cedar Point Clinics
+    deal: cedar-point-clinics
+    billing_contact: "Luis Ferreira <luis@cedarpoint.example>"
+    offer: Pilot
+    lines:
+      - description: "Pilot - patient intake triage (install, two agents, one workflow live)"
+        amount_usd: 12000
+      - description: "Lighthouse credit (10%, approved by the sales rep on the deal)"
+        amount_usd: -1200
+    credit_usd: 1200
+    total_usd: 10800
+    issued: "2026-09-26"
+    due: "2026-10-10"
+    status: Sent
+    approval: approval-INV-KM-0002-send
+    sent_at: "2026-09-26"
+    sent_via: by hand
+    paid_at: null
+    payment_ref: null
+    reminders:
+      - date: "2026-10-11"
+        stage: "Day 1"
+        approval: approval-INV-KM-0002-reminder-1
+    notes:
+      - "2026-09-26 Invoiced on the signed Pilot order with the 10% credit the rep approved."
+      - "2026-10-11 Day 1 reminder approved and sent by hand. No reply yet."
+  - number: INV-KM-0003
+    client: Brightline Studio
+    deal: brightline-studio
+    billing_contact: "Mei Tanaka <mei@brightline.example>"
+    offer: Automation audit
+    lines:
+      - description: "Automation audit - map what you run, keep / wrap / rebuild, readiness report"
+        amount_usd: 2500
+    credit_usd: 0
+    total_usd: 2500
+    issued: "2026-10-01"
+    due: "2026-10-15"
+    status: Sent
+    approval: approval-INV-KM-0003-send
+    sent_at: "2026-10-01"
+    sent_via: by hand
+    paid_at: null
+    payment_ref: null
+    reminders: []
+    notes:
+      - "2026-10-01 Invoiced on signature. Kickoff call pending with Delivery."

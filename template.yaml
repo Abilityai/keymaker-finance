@@ -1,0 +1,90 @@
+# Keymaker Finance - a Trinity agent template
+# Part of the Keymaker agency starter set (keymaker.agency), built in public during
+# the Agent-Native Agency workshop series. Public, zero-credential by default.
+name: keymaker-finance
+display_name: "Keymaker Finance"
+description: |
+  The finance desk of Keymaker, an agency that sets up automation on Trinity for other
+  companies. Turns a won deal into an invoice, records payments, chases what is overdue -
+  and nothing reaches a client until the finance lead approves that exact document in
+  their Workspace Inbox. Every write to the books prints the change and needs a confirm.
+
+  Runs out of the box on a file-backed ledger (ledger/invoices.yaml) with sample invoices.
+  Add a sending key and the same playbooks send what a person approved; without one the
+  finance lead sends the approved file by hand.
+tagline: "Invoices from won deals. Drafts, never sends; counts, never guesses."
+version: "0.1.0"
+author: "Keymaker (keymaker.agency)"
+
+resources:
+  cpu: "1"
+  memory: "2g"
+
+avatar_prompt: >
+  A precise finance lead at a tidy desk, a ledger open under a warm lamp, one hand resting
+  on a stamp that reads APPROVED, calm expression, evening light. Photographic.
+
+use_cases:
+  - "Thorne & Ridley signed - invoice the Pilot"
+  - "What is outstanding, and who is overdue?"
+  - "Harbor & Vale paid $12,000 on the 14th - record it"
+  - "Draft the second reminder to Cedar Point - I will send it"
+
+capabilities:
+  - invoicing
+  - payment-recording
+  - overdue-follow-up
+  - operator-approval-gates
+
+commands:
+  - name: invoice
+    description: Turn a won deal into an invoice document, then ask the finance lead to approve it; send only what they approved
+    usage: /invoice <deal slug> [--offer <name>] [--amount <usd>] [--credit <usd>]
+  - name: payments
+    description: Record a payment against an invoice, or list what is still unpaid
+    usage: /payments [<invoice number> --amount <usd> --ref <bank reference> --date <YYYY-MM-DD>]
+  - name: overdue
+    description: Review the books - what is outstanding, what is overdue - and draft the next reminder for the finance lead to approve
+    usage: /overdue [--review]
+
+folders:
+  expose: true     # invoices/ and the ledger summary are readable by the agency's other agents
+  consume: true    # reads the handoff Sales writes on a won deal
+
+# Optional. Without it every approved invoice or reminder is sent by hand by the finance lead.
+credentials:
+  env_file:
+    - RESEND_API_KEY
+
+credential_setup:
+  - name: RESEND_API_KEY
+    title: Resend sending key
+    description: A sending-only Resend key for your agency domain. Lets the desk send an invoice or a reminder AFTER the finance lead approves it. Leave empty and every approved document is sent by hand.
+    required: false
+    secret: true
+    format: secret
+
+# The numbers this desk owns. Declared here so every copy of the agency reports the same
+# things; recorded by the agent when it reviews the books.
+metrics:
+  - name: outstanding_usd
+    type: gauge
+    description: Sum of invoices sent and not yet paid
+  - name: overdue_invoices
+    type: gauge
+    description: Invoices past their due date and unpaid
+  - name: invoiced_month_usd
+    type: counter
+    description: Invoice value approved this month
+  - name: paid_month_usd
+    type: counter
+    description: Payments recorded this month
+
+schedules:
+  - id: weekly-books
+    name: "[weekly-books] Monday books review"
+    cron: "0 9 * * 1"
+    timezone: "America/New_York"
+    message: "/overdue --review"
+    description: "Every Monday: what is outstanding, what is overdue, which reminder is due next - delivered to the finance lead's Workspace. Drafts only; nothing is sent from a schedule."
+    enabled: true

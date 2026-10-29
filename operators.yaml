@@ -1,0 +1,27 @@
+# Who may operate Keymaker Finance. A human edits this; the agent reads it.
+#
+# finance-lead - approves every invoice and reminder before it leaves; records payments
+# principal    - everything the finance lead may, plus write-offs and credits above the list rule
+# rep          - may ask what is outstanding on deals they own; nothing else
+#
+# When canon/ is present (cloned at start), canon/domains/org-context/ORGANISATION.md decides who
+# fills finance-lead and principal; this file is the sample for an agency without a canon.
+version: 1
+operators:
+  - id: principal
+    name: "Your name"
+    email: "you@yourcompany.com"
+    role: principal
+  - id: finance-lead
+    name: "Your name"            # until the agency hires a finance lead, the principal holds the seat
+    email: "you@yourcompany.com"
+    role: finance-lead
+  - id: rep-1
+    name: "Sam Reyes"            # sample rep - replace or remove
+    email: "sam@keymaker.agency"
+    role: rep
+rules:
+  unknown_operator: refuse
+  approving_roles: [finance-lead, principal]
+  write_off_role: principal
+  sending: only an approved draft, via scripts/mail.py

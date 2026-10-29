@@ -1,0 +1,26 @@
+# secrets
+.env
+*.pem
+*.key
+credentials.json
+# Trinity + Claude Code runtime state (never commit)
+.mcp.json
+.trinity/
+.claude/projects/
+.claude/statsig/
+.claude/todos/
+.claude/debug/
+.claude/sessions/
+.claude/shell-snapshots/
+.claude/.credentials.json
+# generated
+content/
+*.log
+__pycache__/
+.DS_Store
+
+# the agency canon, cloned at start
+canon/
+
+# the canon clone hook is tracked; the rest of .trinity/ is runtime state
+!.trinity/setup.sh
