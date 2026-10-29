@@ -68,15 +68,19 @@ credential_setup:
 # things; recorded by the agent when it reviews the books.
 metrics:
   - name: outstanding_usd
+    label: "Outstanding (USD)"
     type: gauge
     description: Sum of invoices sent and not yet paid
   - name: overdue_invoices
+    label: "Overdue invoices"
     type: gauge
     description: Invoices past their due date and unpaid
   - name: invoiced_month_usd
+    label: "Invoiced this month (USD)"
     type: counter
     description: Invoice value approved this month
   - name: paid_month_usd
+    label: "Paid this month (USD)"
     type: counter
     description: Payments recorded this month
 
